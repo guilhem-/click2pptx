@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "click2pptx"
+version = "0.1.0"
+description = "Convertir un export Freeplane-HTML en PPTX cliquable"
+authors = [{name="Unknown"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4",
+    "python-pptx"
+]
+
+[project.scripts]
+click2pptx = "click2pptx.generate_clickable_pptx:main"
