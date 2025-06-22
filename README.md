@@ -55,5 +55,4 @@ Run the tests with coverage enabled:
 
 ```bash
 pytest --cov=click2pptx
-=
 ```
