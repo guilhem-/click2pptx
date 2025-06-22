@@ -18,6 +18,7 @@ from click2pptx.generate_clickable_pptx import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def sample_html_text():
     path = Path(__file__).parent / "test_data" / "carte.html"
@@ -28,12 +29,19 @@ def sample_html_text():
 # parse_html
 # ---------------------------------------------------------------------------
 
+
 def test_parse_html_sample(sample_html_text):
     clickables, img_src = parse_html(sample_html_text)
     assert img_src == "carte.html_files/image.png"
     assert clickables == [
-        ([140, 50, 412, 108], "https://news.google.com/search?q=ia&hl=fr&gl=FR&ceid=FR%3Afr"),
-        ([437, 67, 502, 91], "https://news.google.com/search?q=ia&hl=fr&gl=FR&ceid=FR%3Afr"),
+        (
+            [140, 50, 412, 108],
+            "https://news.google.com/search?q=ia&hl=fr&gl=FR&ceid=FR%3Afr",
+        ),
+        (
+            [437, 67, 502, 91],
+            "https://news.google.com/search?q=ia&hl=fr&gl=FR&ceid=FR%3Afr",
+        ),
         ([100, 53, 115, 77], "https://duckduckgo.com/"),
         ([50, 81, 115, 105], "https://duckduckgo.com/"),
     ]
@@ -42,6 +50,7 @@ def test_parse_html_sample(sample_html_text):
 # ---------------------------------------------------------------------------
 # create_pptx
 # ---------------------------------------------------------------------------
+
 
 def test_create_pptx_creates_shapes(tmp_path):
     clickables = [([10, 10, 20, 20], "http://example.com")]
@@ -57,6 +66,7 @@ def test_create_pptx_creates_shapes(tmp_path):
 # ---------------------------------------------------------------------------
 # find_html
 # ---------------------------------------------------------------------------
+
 
 def test_find_html_existing(tmp_path):
     html_file = tmp_path / "foo.html"
@@ -75,9 +85,9 @@ def test_find_html_automatic(tmp_path, monkeypatch):
 # make_output_path
 # ---------------------------------------------------------------------------
 
+
 def test_make_output_path_creates_folder(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     out_path = make_output_path(None)
     assert Path(out_path).parent.exists()
     assert re.match(r"output/mind_map_clickable_\d{8}_\d{6}\.pptx", out_path)
-
