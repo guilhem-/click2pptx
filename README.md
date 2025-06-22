@@ -37,21 +37,22 @@ image used, then generates an equivalent PPTX. Each active region of the
 image is covered by an invisible rectangle with the hyperlink defined in
 the Freeplane export.
 
-## Développement
+## Development
 
-Installez les dépendances de développement puis mettez en place les hooks
-pré‑commit :
+Install the development dependencies:
 
 ```bash
-pip install .[dev]
+pip install -e ".[dev]"
+```
+
+Initialize the pre-commit hooks:
+
+```bash
 pre-commit install
 ```
 
-Le hook `pre-commit` exécute `black` en mode vérification et bloque le commit si
-le formatage n'est pas conforme.
-
-Les tests s'exécutent avec `pytest` et un rapport de couverture est produit :
+Run the tests with coverage enabled:
 
 ```bash
-pytest
+pytest --cov=click2pptx
 ```
