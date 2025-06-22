@@ -36,3 +36,22 @@ The program reads the HTML file, extracts the clickable areas and the
 image used, then generates an equivalent PPTX. Each active region of the
 image is covered by an invisible rectangle with the hyperlink defined in
 the Freeplane export.
+
+## Développement
+
+Installez les dépendances de développement puis mettez en place les hooks
+pré‑commit :
+
+```bash
+pip install .[dev]
+pre-commit install
+```
+
+Le hook `pre-commit` exécute `black` en mode vérification et bloque le commit si
+le formatage n'est pas conforme.
+
+Les tests s'exécutent avec `pytest` et un rapport de couverture est produit :
+
+```bash
+pytest
+```

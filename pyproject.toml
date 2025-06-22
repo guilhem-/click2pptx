@@ -15,5 +15,19 @@ dependencies = [
     "python-pptx"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=click2pptx --cov-report=term-missing"
+
 [project.scripts]
 click2pptx = "click2pptx.generate_clickable_pptx:main"
