@@ -36,3 +36,23 @@ The program reads the HTML file, extracts the clickable areas and the
 image used, then generates an equivalent PPTX. Each active region of the
 image is covered by an invisible rectangle with the hyperlink defined in
 the Freeplane export.
+
+## Development
+
+Install the development dependencies:
+
+```bash
+pip install -e ".[dev]"
+```
+
+Initialize the pre-commit hooks:
+
+```bash
+pre-commit install
+```
+
+Run the tests with coverage enabled:
+
+```bash
+pytest --cov=click2pptx
+```
