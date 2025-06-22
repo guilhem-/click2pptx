@@ -56,3 +56,15 @@ Run the tests with coverage enabled:
 ```bash
 pytest --cov=click2pptx
 ```
+
+## Standalone binary
+
+You can build a standalone executable using PyInstaller and the
+provided `click2pptx.spec` file:
+
+```bash
+pip install pyinstaller
+pyinstaller click2pptx.spec
+```
+
+The resulting binary will be available in the `dist` folder.
