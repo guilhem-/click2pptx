@@ -34,11 +34,13 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.dml import MSO_FILL
+
 EMU_PER_PX = 9_525  # 1 px → 9 525 EMU (pptx)
 
 # ---------------------------------------------------------------------------#
 # I/O utilities
 # ---------------------------------------------------------------------------#
+
 
 def find_html(path: str | None) -> str:
     """Return the path of the HTML file to process."""
@@ -70,6 +72,7 @@ def make_output_path(path: str | None) -> str:
 # ---------------------------------------------------------------------------#
 # Freeplane HTML parsing
 # ---------------------------------------------------------------------------#
+
 
 def parse_html(html_text: str):
     """
@@ -107,6 +110,7 @@ def parse_html(html_text: str):
 # PPTX generation
 # ---------------------------------------------------------------------------#
 
+
 def create_pptx(clickables, img_src, dest_path):
     prs = Presentation()
     slide = prs.slides.add_slide(prs.slide_layouts[6])
@@ -132,6 +136,7 @@ def create_pptx(clickables, img_src, dest_path):
 # ---------------------------------------------------------------------------#
 # Main program
 # ---------------------------------------------------------------------------#
+
 
 def main():
     ap = argparse.ArgumentParser(
