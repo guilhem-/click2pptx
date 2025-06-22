@@ -3,23 +3,22 @@
 generate_clickable_pptx.py
 -------------------------
 
-Convertit un export Freeplane-HTML contenant un <map> d’image‐cliquable
-en un PowerPoint où chaque zone active est recréée par un rectangle
-100 % transparent pointant vers le lien externe correspondant.
+Convert a Freeplane HTML export containing an image map into a PowerPoint
+presentation where each active area is recreated as a fully transparent
+rectangle linking to the corresponding external URL.
 
 Usage
 =====
     python generate_clickable_pptx.py [-i SOURCE.html] [-o DESTINATION.pptx]
 
-    • -i / --input   : fichier HTML source.
-                      S’il est omis, on prend le *premier* « *.html » trouvé
-                      dans le répertoire courant.
-    • -o / --output : chemin du fichier PPTX à produire.
-                      S’il est omis, le script crée un dossier « output »
-                      (s’il n’existe pas) et y écrit un fichier
-                      « mind_map_clickable_YYYYMMDD_HHMMSS.pptx ».
+    • -i / --input   : source HTML file. If omitted, the *first* ``*.html``
+                       found in the current directory is used.
+    • -o / --output : path of the PPTX file to create. If omitted, the
+                       script creates an ``output`` folder (if needed) and
+                       writes ``mind_map_clickable_YYYYMMDD_HHMMSS.pptx``
+                       inside it.
 
-Dépendances :  `beautifulsoup4`, `python-pptx`.
+Dependencies: ``beautifulsoup4``, ``python-pptx``.
 """
 
 import argparse
@@ -38,24 +37,24 @@ from pptx.enum.dml import MSO_FILL
 EMU_PER_PX = 9_525  # 1 px → 9 525 EMU (pptx)
 
 # ---------------------------------------------------------------------------#
-# Outils d'E/S
+# I/O utilities
 # ---------------------------------------------------------------------------#
 
 def find_html(path: str | None) -> str:
-    """Retourne le chemin du fichier HTML à traiter."""
+    """Return the path of the HTML file to process."""
     if path:
         if not os.path.isfile(path):
-            sys.exit(f"Fichier source introuvable : {path}")
+            sys.exit(f"Source file not found: {path}")
         return path
 
     matches = glob.glob("*.html") + glob.glob("*.htm")
     if not matches:
-        sys.exit("Aucun fichier *.html trouvé et aucun --input fourni.")
+        sys.exit("No *.html file found and no --input provided.")
     return matches[0]
 
 
 def make_output_path(path: str | None) -> str:
-    """Construit le chemin de sortie (crée ./output si besoin)."""
+    """Build the output path (create ./output if needed)."""
     if path:
         out_dir = os.path.dirname(path)
         if out_dir and not os.path.exists(out_dir):
@@ -69,14 +68,14 @@ def make_output_path(path: str | None) -> str:
 
 
 # ---------------------------------------------------------------------------#
-# Parsing du HTML Freeplane
+# Freeplane HTML parsing
 # ---------------------------------------------------------------------------#
 
 def parse_html(html_text: str):
     """
-    Extrait :
-      • la liste des zones cliquables ([x1,y1,x2,y2], url)
-      • le chemin éventuel de l'image de fond
+    Extracts:
+      • the list of clickable areas ``([x1, y1, x2, y2], url)``
+      • the optional path to the background image
     """
     soup = BeautifulSoup(html_text, "html.parser")
 
@@ -84,7 +83,7 @@ def parse_html(html_text: str):
     if not imagemap:
         return [], None
 
-    # id interne → lien externe http(s)
+    # internal id → external http(s) link
     id2url = {}
     for a_internal in soup.find_all("a", id=re.compile(r"FMID_\d+FM")):
         external = a_internal.find_next("a", href=re.compile(r"^https?://"))
@@ -105,7 +104,7 @@ def parse_html(html_text: str):
 
 
 # ---------------------------------------------------------------------------#
-# Génération du PPTX
+# PPTX generation
 # ---------------------------------------------------------------------------#
 
 def create_pptx(clickables, img_src, dest_path):
@@ -113,7 +112,7 @@ def create_pptx(clickables, img_src, dest_path):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
     if img_src and os.path.isfile(img_src):
-        slide.shapes.add_picture(img_src, Emu(0), Emu(0))  # image en toile de fond
+        slide.shapes.add_picture(img_src, Emu(0), Emu(0))  # background image
 
     for coords, url in clickables:
         x1, y1, x2, y2 = coords
@@ -121,7 +120,7 @@ def create_pptx(clickables, img_src, dest_path):
         width, height = Emu((x2 - x1) * EMU_PER_PX), Emu((y2 - y1) * EMU_PER_PX)
 
         rect = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
-        # REND LE RECTANGLE INVISIBLE 
+        # MAKE THE RECTANGLE INVISIBLE
         rect.fill.background()
         rect.line.fill.background()
 
@@ -131,15 +130,15 @@ def create_pptx(clickables, img_src, dest_path):
 
 
 # ---------------------------------------------------------------------------#
-# Programme principal
+# Main program
 # ---------------------------------------------------------------------------#
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Convertit un export Freeplane-HTML en PPTX cliquable."
+        description="Convert a Freeplane HTML export into a clickable PPTX."
     )
-    ap.add_argument("-i", "--input", help="Fichier HTML source")
-    ap.add_argument("-o", "--output", help="Fichier PPTX de destination")
+    ap.add_argument("-i", "--input", help="Source HTML file")
+    ap.add_argument("-o", "--output", help="Destination PPTX file")
     args = ap.parse_args()
 
     html_path = find_html(args.input)
@@ -150,10 +149,10 @@ def main():
 
     clickables, img_src = parse_html(html_text)
     if not clickables:
-        sys.exit("Aucune zone cliquable avec lien externe trouvée dans le HTML.")
+        sys.exit("No clickable area with external link found in the HTML.")
 
     create_pptx(clickables, img_src, output_path)
-    print(f"PPTX généré : {output_path}")
+    print(f"Generated PPTX: {output_path}")
 
 
 if __name__ == "__main__":
