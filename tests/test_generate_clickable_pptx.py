@@ -90,4 +90,6 @@ def test_make_output_path_creates_folder(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     out_path = make_output_path(None)
     assert Path(out_path).parent.exists()
-    assert re.match(r"output/mind_map_clickable_\d{8}_\d{6}\.pptx", out_path)
+    # Normalize the path to use forward slashes
+    normalized_out_path = Path(out_path).as_posix()
+    assert re.match(r"output/mind_map_clickable_\d{8}_\d{6}\.pptx", normalized_out_path)
